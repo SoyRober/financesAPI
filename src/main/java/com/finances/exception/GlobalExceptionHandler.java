@@ -14,8 +14,17 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ApiResponse(e.getMessage(), false));
     }
 
-    @ExceptionHandler(Exception.class)
+    @ExceptionHandler(AttributeAlreadyExistsException.class)
+    public ResponseEntity<ApiResponse> handleAttributeAlreadyExistsException(Exception e) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ApiResponse(e.getMessage(), false));
+    }
+        @ExceptionHandler(ShortAttributeException.class)
+    public ResponseEntity<ApiResponse> handleShortAttributeException(Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ApiResponse(e.getMessage(), false));
+    }
+        @ExceptionHandler(Exception.class)
     public ResponseEntity<ApiResponse> handleGeneralException(Exception e) {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ApiResponse("Something went wrong", false));
     }
+
 }

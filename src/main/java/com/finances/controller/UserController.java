@@ -4,9 +4,9 @@ import com.finances.dto.request.LoginRequest;
 import com.finances.dto.request.RegisterRequest;
 import com.finances.dto.response.ApiResponse;
 import com.finances.service.UserService;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class UserController {
@@ -16,13 +16,13 @@ public class UserController {
         this.userService = userService;
     }
 
-    @PostMapping("/public/user/login")
-    public ResponseEntity<ApiResponse> login(LoginRequest loginRequest) {
+    @PostMapping("/public/login")
+    public ResponseEntity<ApiResponse> login(@Valid @RequestBody LoginRequest loginRequest) {
         return ResponseEntity.ok(new ApiResponse(userService.login(loginRequest), true));
     }
 
-    @PostMapping("/public/user/register")
-    public ResponseEntity<ApiResponse> register(RegisterRequest registerRequest) {
+    @PostMapping("/public/register")
+    public ResponseEntity<ApiResponse> register(@Valid @RequestBody RegisterRequest registerRequest) {
         return ResponseEntity.ok(new ApiResponse(userService.register(registerRequest), true));
     }
 }

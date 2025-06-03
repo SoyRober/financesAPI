@@ -4,10 +4,8 @@ services:
     container_name: mysql_db
     restart: always
     environment:
-      MYSQL_ROOT_PASSWORD: rootpassword
-      MYSQL_DATABASE: mydb
-      MYSQL_USER: myuser
-      MYSQL_PASSWORD: mypassword
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: finances
     ports:
       - "3306:3306"
     volumes:
@@ -20,9 +18,9 @@ services:
     environment:
       PMA_HOST: db
       PMA_USER: root
-      PMA_PASSWORD: rootpassword
+      PMA_PASSWORD: root
     ports:
-      - "8080:80"
+      - "8081:80"
     depends_on:
       - db
 

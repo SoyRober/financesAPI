@@ -7,21 +7,23 @@ import com.finances.exception.ShortAttributeException;
 import com.finances.model.User;
 import com.finances.repository.UserRepo;
 import com.finances.exception.NonExistentEntityException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @Service
 public class UserService {
     private final UserRepo userRepo;
     private final JwtService jwtService;
+    private final PasswordEncoder passwordEncoder;
 
-    public UserService(UserRepo userRepo, JwtService jwtService) {
+    public UserService(UserRepo userRepo, JwtService jwtService, PasswordEncoder passwordEncoder) {
         this.userRepo = userRepo;
         this.jwtService = jwtService;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public String login(LoginRequest loginRequest) throws NonExistentEntityException {
-        User currentUser = userRepo.findByUsername(loginRequest.username())
+        User currentUser = userRepo.findByUsername(loginRequest.getUsername())
                 .orElseThrow(() -> new NonExistentEntityException("This user does not exists"));
 
         return jwtService
@@ -29,21 +31,20 @@ public class UserService {
     }
 
     public String register(RegisterRequest registerRequest) {
-        if (userRepo.findByUsername(registerRequest.username()).isPresent())
+        if (userRepo.findByUsername(registerRequest.getUsername()).isPresent())
             throw new AttributeAlreadyExistsException("This username is taken");
 
-        if (userRepo.findByEmail(registerRequest.email()).isPresent())
+        if (userRepo.findByEmail(registerRequest.getEmail()).isPresent())
             throw new AttributeAlreadyExistsException("This email is taken");
 
-        if (registerRequest.password().length() < 5)
+        if (registerRequest.getPassword().length() < 5)
             throw new ShortAttributeException("The password must be more than 5 characters");
 
-        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-
         User newUser = new User();
-        newUser.setEmail(registerRequest.email());
+        newUser.setUsername(registerRequest.getUsername());
+        newUser.setEmail(registerRequest.getEmail());
         newUser.setRole(User.Role.USER);
-        newUser.setPassword(passwordEncoder.encode(registerRequest.password()));
+        newUser.setPassword(passwordEncoder.encode(registerRequest.getPassword()));
 
         userRepo.save(newUser);
 
