@@ -3,6 +3,7 @@ package com.finances.service;
 import com.finances.dto.request.LoginRequest;
 import com.finances.dto.request.RegisterRequest;
 import com.finances.exception.AttributeAlreadyExistsException;
+import com.finances.exception.IncorrectAttributeException;
 import com.finances.exception.ShortAttributeException;
 import com.finances.model.User;
 import com.finances.repository.UserRepo;
@@ -24,7 +25,11 @@ public class UserService {
 
     public String login(LoginRequest loginRequest) throws NonExistentEntityException {
         User currentUser = userRepo.findByUsername(loginRequest.getUsername())
-                .orElseThrow(() -> new NonExistentEntityException("This user does not exists"));
+                .orElseThrow(() -> new IncorrectAttributeException("Incorrect credentials"));
+
+        if (!passwordEncoder.matches(loginRequest.getPassword(), currentUser.getPassword())) {
+            throw new IncorrectAttributeException("Incorrect credentials");
+        }
 
         return jwtService
                 .generateToken(currentUser.getUsername(), currentUser.getRole().toString(), currentUser.getEmail());

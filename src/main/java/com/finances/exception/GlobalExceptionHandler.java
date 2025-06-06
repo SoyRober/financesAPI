@@ -27,4 +27,8 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ApiResponse("Something went wrong", false));
     }
 
+    @ExceptionHandler(IncorrectAttributeException.class)
+    public ResponseEntity<ApiResponse> handleIncorrectAttributeException(IncorrectAttributeException e) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ApiResponse(e.getMessage(), false));
+    }
 }
