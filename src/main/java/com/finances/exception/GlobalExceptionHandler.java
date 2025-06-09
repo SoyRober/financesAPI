@@ -31,4 +31,9 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ApiResponse> handleIncorrectAttributeException(IncorrectAttributeException e) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ApiResponse(e.getMessage(), false));
     }
+
+    @ExceptionHandler(AlreadyExistentEntityException.class)
+    public ResponseEntity<ApiResponse> handleAlreadyExistentEntityException(AlreadyExistentEntityException e) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ApiResponse(e.getMessage(), false));
+    }
 }
