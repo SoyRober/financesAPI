@@ -18,11 +18,19 @@ public class UserController {
 
     @PostMapping("/public/login")
     public ResponseEntity<ApiResponse> login(@Valid @RequestBody LoginRequest loginRequest) {
-        return ResponseEntity.ok(new ApiResponse(userService.login(loginRequest), true));
+        return ResponseEntity.ok(
+                new ApiResponse(
+                        userService.login(loginRequest), true
+                )
+        );
     }
 
     @PostMapping("/public/register")
     public ResponseEntity<ApiResponse> register(@Valid @RequestBody RegisterRequest registerRequest) {
-        return ResponseEntity.ok(new ApiResponse(userService.register(registerRequest), true));
+        return ResponseEntity.ok(
+                new ApiResponse(
+                        userService.register(registerRequest), true
+                )
+        );
     }
 }
