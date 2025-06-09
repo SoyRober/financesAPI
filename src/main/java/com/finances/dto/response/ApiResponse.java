@@ -1,3 +1,3 @@
 package com.finances.dto.response;
 
-public record ApiResponse (String message, boolean success) {}
+public record ApiResponse (Object message, boolean success) {}
