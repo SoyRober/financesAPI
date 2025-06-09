@@ -1,16 +1,18 @@
 package com.finances.model;
 
 import jakarta.persistence.*;
+import jakarta.persistence.Table;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Set;
 
 @Entity
 @Table(
-        name = "users",
+        name = "user",
         uniqueConstraints = @UniqueConstraint(columnNames = {"username", "email"})
 )
 public class User implements UserDetails {
@@ -32,6 +34,9 @@ public class User implements UserDetails {
 
     @Enumerated(EnumType.STRING)
     private Role role;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Board> boards;
 
     public Role getRole() {
         return role;
@@ -73,9 +78,17 @@ public class User implements UserDetails {
         this.password = password;
     }
 
+    public Set<Board> getBoards() {
+        return boards;
+    }
+
+    public void setBoards(Set<Board> boards) {
+        this.boards = boards;
+    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Collections.singleton(new SimpleGrantedAuthority("ROLE_" + role.name()));
+        return Collections.singleton(new SimpleGrantedAuthority(role.name()));
     }
 
     @Override
